@@ -1,0 +1,44 @@
+sudo apt-get update
+
+sudo apt-get upgrade
+
+sudo apt-get install default-jre
+
+wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+
+echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list
+
+sudo apt-get update
+
+sudo apt-get install elasticsearch
+
+sudo nano /etc/elasticsearch/elasticsearch.yml              #open file & highlight & change below two lines detail
+  network.host: "localhost"
+  http.port: 9200
+  
+sudo service elasticsearch start
+
+sudo service elasticsearch status
+
+sudo curl http://localhost:9200
+
+sudo apt-get install logstash
+
+vim /etc/logstash/conf.d/10-syslog.conf                     #configuration about what you want to collect. copy from apache.conf then :wq to save & exit
+
+sudo service logstash restart
+
+sudo service logstash status
+
+sudo curl -XGET 'localhost:9200/_cat/indices?v&pretty'
+
+sudo apt-get install kibana
+
+sudo vim /etc/kibana/kibana.yml                             #highlight & change below detail 
+  server.port: 5601
+  server.host: "0.0.0.0"
+  elasticsearch.hosts: "http://localhost:9200"
+  
+sudo service kibana start
+
+#allow in firewall Point your browser to ‘http://YOUR_ELASTIC_IP:5601’ after Kibana is started
